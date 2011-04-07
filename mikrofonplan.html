@@ -1,0 +1,104 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <title></title>
+  </head>
+  <style>
+  .actor{
+    height:30px;
+    width:120px;
+    text-align:center;
+  }
+  .blue-col {
+    background-color:#8888FF;
+  }
+  .red-col {
+    background-color:#FF8888;
+  }
+
+  .yellow-col {
+    background-color:#FFFF88;
+  }
+
+  .green-col {
+    background-color:#88FF88;
+  }
+  .break-line{
+    text-align:center;
+    background-color:#DDD;
+  }
+  </style>
+  <script language="javascript" src="./jquery-1.5.2.min.js"></script>
+  <script language="javascript" src="./jquery-ui-1.8.11.custom.min.js"></script>
+  <script language="javacsript" src="./dragtable.js"</script>
+  <script language="javascript" src="./revue.data.json.js"></script>
+  <script language="javascript">
+    var mics = [
+      {id: "HS1", "name": "Blåt headset 1" , "class":"blue-col"},
+      {id: "HS2", "name": "Rødt headset 2" , "class":"red-col"},
+      {id: "HS3", "name": "Gult headset 3" , "class":"yellow-col"},
+      {id: "HS4", "name": "Grønt headset"  , "class":"green-col"},
+      {id: "MIC1", "name": "Blå mikrofon 1" , "class":"blue-col"},
+      {id: "MIC2" ,"name": "Rød mikrofon 2" , "class":"red-col"},
+      {id: "MIC3" ,"name": "Gul mikrofon 3" , "class":"yellow-col"},
+      {id: "MIC4", "name": "Grøn mikrofon 4", "class":"green-col"}
+    ]
+    var source = null;
+    $('document').ready(function(){
+      $('.actor').draggable({helper:'clone',start:function(event,ui){source
+      = event.target}}).droppable({drop:
+      function(event,ui){
+        target_id = event.target.id.split('-');
+        source_id = source.id.split('-');
+        if(target_id[1] == source_id[1]){
+          tmp = event.target.innerHTML;
+          event.target.innerHTML = source.innerHTML;
+          $('#'+source.id).html(tmp);
+        }
+        source=null;}});
+    });
+  </script>
+  <body>
+  <table id="rock" class="draggable"> 
+  <tr>
+  <td>Sketch</td>
+ <script language="javascript">
+   for (m in mics){
+    var mic = mics[m];
+    document.write("<td class=" + mic.class + ">" + mics[m].name + "</td>");
+  }
+ </script>
+ </tr>
+ <script language="javascript">
+  var j=0;
+  for (a in data){
+
+    document.write("<tr><td colspan=\"" + mics.length+1 + "\" class=\"break-line\">" + data[a].title + "</td></tr>");
+    for(s in data[a].materials) {
+    sketch = data[a].materials[s];
+    document.write("<tr>");
+    document.write("<td>" + sketch.title + "</td>");
+    var i = 0;
+    for (m in mics){
+    var mic = mics[m];
+    if(sketch.roles[i]) { 
+      actor = sketch.roles[i].actor;
+    } else { 
+      actor = "";
+    }
+    document.write("<td class=\"" + mic.class + " actor \" id=\"" +
+    mic.id + "-" + j + "\" >" + actor + "</td>");
+    i++;
+  }
+
+    
+    document.write("</tr>");
+    j++;
+    }
+  }
+ </script>
+  </table>
+
+  </body>
+</html>
+
