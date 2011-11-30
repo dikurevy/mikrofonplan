@@ -1,6 +1,7 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml">
   <head>
+  <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
     <title></title>
   </head>
   <style>
@@ -71,11 +72,11 @@
  </tr>
  <script language="javascript">
   var j=0;
-  for (a in data){
-
-    document.write("<tr><td colspan=\"" + mics.length+1 + "\" class=\"break-line\">" + data[a].title + "</td></tr>");
-    for(s in data[a].materials) {
-    sketch = data[a].materials[s];
+  for (a in data.acts){
+    var act = data.acts[a];
+    document.write("<tr><td colspan=\"" + mics.length+1 + "\" class=\"break-line\">" + act.title + "</td></tr>");
+    for(s in act.materials) {
+    sketch = act.materials[s];
     document.write("<tr>");
     document.write("<td>" + sketch.title + "</td>");
     var i = 0;
