@@ -5,6 +5,9 @@
     <title></title>
   </head>
   <style>
+  .mic{
+    text-align:center;
+  }
   .actor{
     height:30px;
     width:120px;
@@ -24,6 +27,9 @@
   .green-col {
     background-color:#88FF88;
   }
+  .grey-col {
+    background-color:rgba(0,0,0,0.05);
+  }
   .break-line{
     text-align:center;
     background-color:#DDD;
@@ -35,14 +41,16 @@
   <script language="javascript" src="./revue.data.json.js"></script>
   <script language="javascript">
     var mics = [
-      {id: "HS1", "name": "Blåt headset 1" , "class":"blue-col"},
-      {id: "HS2", "name": "Rødt headset 2" , "class":"red-col"},
-      {id: "HS3", "name": "Gult headset 3" , "class":"yellow-col"},
-      {id: "HS4", "name": "Grønt headset"  , "class":"green-col"},
-      {id: "MIC1", "name": "Blå mikrofon 1" , "class":"blue-col"},
-      {id: "MIC2" ,"name": "Rød mikrofon 2" , "class":"red-col"},
-      {id: "MIC3" ,"name": "Gul mikrofon 3" , "class":"yellow-col"},
-      {id: "MIC4", "name": "Grøn mikrofon 4", "class":"green-col"}
+      {id: "MIC1", "name": "Blå mikrofon 1" , "color": "#0000FF", "class":"blue-col"},
+      {id: "MIC2" ,"name": "Rød mikrofon 2" , "color": "#FF0000", "class":"red-col"},
+      {id: "MIC3" ,"name": "Grå mikrofon 3" , "color": "#CCCCCC",
+      "class":"grey-col"},
+      {id: "MIC4", "name": "Gul mikrofon 4", "color": "#FFFF00",
+      "class":"yellow-col"},
+      {id: "HS1", "name": "Blå headset 1" , "class":"blue-col"},
+      {id: "HS2", "name": "Rød headset 2" , "class":"red-col"},
+      {id: "HS3", "name": "Grå headset 3" , "class":"grey-col"},
+      {id: "HS4", "name": "Gul headset 4"  , "class":"yellow-col"}
     ]
     var source = null;
     $('document').ready(function(){
@@ -62,13 +70,14 @@
   <body>
   <table id="rock" class="draggable"> 
   <tr>
-  <td>Sketch</td>
+  <td onclick="jQuery('.hidden').toggle()">Sketch</td>
  <script language="javascript">
    for (m in mics){
     var mic = mics[m];
-    document.write("<td class=" + mic.class + ">" + mics[m].name + "</td>");
+    document.write("<td class=\"mic " + mic.class + "\">" + mics[m].name + "</td>");
   }
  </script>
+ <td width="100" class="hidden">Skjul</td>
  </tr>
  <script language="javascript">
   var j=0;
@@ -88,18 +97,21 @@
       actor = "";
     }
     document.write("<td class=\"" + mic.class + " actor \" id=\"" +
-    mic.id + "-" + j + "\" >" + actor + "</td>");
+    mic.id + "-" + j + "\" ></td>");
     i++;
   }
+    for(var i=0;i < sketch.roles.length; i++){
+    document.write("<td class=\"hidden actor \" id=\"actor" +
+   i  + "-" + j + "\" >" + sketch.roles[i].actor + "</td>");
 
-    
+    }
+
     document.write("</tr>");
     j++;
     }
   }
  </script>
   </table>
-
   </body>
 </html>
 
