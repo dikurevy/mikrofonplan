@@ -5,6 +5,20 @@
     <title></title>
   </head>
   <style>
+  *{
+    font-size:12pt;
+    font-family: Arial, Tahoma, sans-serif;
+  }
+  table{
+    border-collapse:collapse;
+  }
+  td {
+    padding:5px;
+    border:1px solid #000;
+  }
+  td.sketchtitle{
+    font-weight:bold;
+  }
   .mic{
     text-align:center;
   }
@@ -13,15 +27,25 @@
     width:120px;
     text-align:center;
   }
+  
   .blue-col {
     background-color:#8888FF;
+  }
+  .blue-col:hover {
+    background-color:rgba(128,128,255,0.5);
   }
   .red-col {
     background-color:#FF8888;
   }
+  .red-col:hover {
+    background-color:rgba(255,128,128,0.5);
+  }
 
   .yellow-col {
     background-color:#FFFF88;
+  }
+  .yellow-col:hover {
+    background-color:rgba(255,255,128,0.5);
   }
 
   .green-col {
@@ -30,6 +54,9 @@
   .grey-col {
     background-color:rgba(0,0,0,0.05);
   }
+  .grey-col:hover {
+    background-color:rgba(0,0,0,0.01);
+  }
   .break-line{
     text-align:center;
     background-color:#DDD;
@@ -37,9 +64,9 @@
   </style>
   <script language="javascript" src="./jquery-1.5.2.min.js"></script>
   <script language="javascript" src="./jquery-ui-1.8.11.custom.min.js"></script>
-  <script language="javacsript" src="./dragtable.js"</script>
   <script language="javascript" src="./revue.data.json.js"></script>
   <script language="javascript">
+  alert(data);
     var mics = [
       {id: "MIC1", "name": "Blå mikrofon 1" , "color": "#0000FF", "class":"blue-col"},
       {id: "MIC2" ,"name": "Rød mikrofon 2" , "color": "#FF0000", "class":"red-col"},
@@ -64,11 +91,64 @@
           event.target.innerHTML = source.innerHTML;
           $('#'+source.id).html(tmp);
         }
+        saveLayout();
         source=null;}});
+      loadLayout();
     });
+    saveLayout = function(){
+      var sketches=[];
+      jQuery('.sketchrow').each(function(index, Element){
+        sketch = {};
+        sketch.id = jQuery(Element).first().attr('id');
+        sketch.columns = [];
+        jQuery(Element).children('.mic').each(function(index,Element){
+          var micid = jQuery(Element).attr('id').split('-');
+          sketch.columns.push({'id':micid[0],'value':jQuery(Element).html()});
+           
+        });
+
+        sketch.unassigned = [];
+        jQuery(Element).children('td.hidden').each(function(index,Element){
+          sketch.unassigned.push(jQuery(Element).html());
+        });
+        sketches.push(sketch);
+      });
+      localStorage.data = JSON.stringify(sketches);
+      jQuery('#something').val(JSON.stringify(sketches));
+    }
+
+    loadLayout = function(){
+//      var layout = prompt('Insert json code:');
+    var data = JSON.parse(localStorage.data);
+      for(n in data){
+        sketch = data[n];
+        for(i in sketch.columns){
+          var mic = sketch.columns[i].id;
+          jQuery('#'+ sketch.id + ' .'+mic).html(sketch.columns[i].value);
+          jQuery('#'+ sketch.id + ' .hidden').each(function(index,Element){
+            if(jQuery(Element).html() == sketch.columns[i].value){
+              jQuery(Element).html('');
+            }
+          });
+        }
+      }
+    }
+    resetState = function(){
+      localStorage.data = null;
+      loadLayout();
+      window.location.reload();
+    }
   </script>
   <body>
-  <table id="rock" class="draggable"> 
+<div class="hidden">
+<button onclick="resetState()">reset</button>
+<button onclick="jQuery('#session').toggle()">Gem</button>
+<div id="session">
+<textarea id="something"></textarea>
+</div>
+</div>
+<table id="rock"
+class="draggable">
   <tr>
   <td onclick="jQuery('.hidden').toggle()">Sketch</td>
  <script language="javascript">
@@ -86,8 +166,9 @@
     document.write("<tr><td colspan=\"" + mics.length+1 + "\" class=\"break-line\">" + act.title + "</td></tr>");
     for(s in act.materials) {
     sketch = act.materials[s];
-    document.write("<tr>");
-    document.write("<td>" + sketch.title + "</td>");
+
+    document.write("<tr class=\"sketchrow\" id=\""+sketch.title.replace(/[^a-z0-9]/ig,'') +"\">");
+    document.write("<td class=\"sketchtitle\">" + sketch.title + "</td>");
     var i = 0;
     for (m in mics){
     var mic = mics[m];
@@ -96,12 +177,12 @@
     } else { 
       actor = "";
     }
-    document.write("<td class=\"" + mic.class + " actor \" id=\"" +
+    document.write("<td class=\"mic " + mic.id + " " + mic.class + " actor \" id=\"" +
     mic.id + "-" + j + "\" ></td>");
     i++;
   }
     for(var i=0;i < sketch.roles.length; i++){
-    document.write("<td class=\"hidden actor \" id=\"actor" +
+    document.write("<td class=\"hidden actor " + sketch.roles[i].actor + "\" id=\"actor" +
    i  + "-" + j + "\" >" + sketch.roles[i].actor + "</td>");
 
     }
